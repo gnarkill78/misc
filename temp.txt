@@ -1,0 +1,50 @@
+I have a docker app with js webserver frontend using jade to serve the main page, and a flask API.
+This is a snippet of the submit form from index.jade:
+
+    form(method="post", action="/users/status")
+      label(for='status') Update Status: &nbsp;
+      input(type='text',name='status',id='status')
+      input(type='submit',name='submit',value='Submit').submit-button
+
+This is the /status API endpoint snippet
+
+@app.route('/status') # get status for a user
+def status():
+    username = request.args.get('username')
+    if not username:
+        return {"status": "ERROR"}
+    cur = db.cursor()
+    cur.execute("SELECT status from blog WHERE username = '" + username + "'")
+    row = cur.fetchone()
+    return jsonify({"status":row[0]})
+
+I also have a users.js sitting in the frontend.
+What do I need to do to actually utilise the form properly to actually write a status update into the blog db?
+
+
+
+
+
+router.post('/post', function(req, res, next) {
+  const { username, status, postContent } = req.body; // Assuming your form sends username, status, and post content
+
+  // Construct the URL for the backend API endpoint to add a new post
+  const url = `http://api:8080/post`;
+
+  // Make a POST request to the backend API endpoint
+  const apiRequest = http.request(url, {
+    method: 'POST',
+    headers: {"Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8'}
+  }, (response) => {
+    response.on("data", (data) => {
+      console.log(`Response from adding post: ${data.toString()}`);
+      // Optionally, you can handle the response here
+      // For example, redirect to a different page or send a response to the client
+      res.redirect('/');
+    });
+  });
+
+  // Send the post data as data in the request body
+  apiRequest.write(`username=${username}&status=${status}&postContent=${postContent}`);
+  apiRequest.end();
+});
