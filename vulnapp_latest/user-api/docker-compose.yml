@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  web:
+    build: . # Comment this if you have already built the Container image
+    ports:
+      - "443:5000"  # Maps port 5000 of the container to port 80 on the host
+    restart: unless-stopped  # Keeps Docker running all the time but won't restart when Docker is stopped manually.
+   
+    healthcheck:  # Regularly checks if the application is running correctly.
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]  # Adjust depending on the specifics of your service.
+      interval: 1m  # Time between running the check.
+      timeout: 10s  # Time to wait before considering the check to have failed.
+      retries: 3  # Number of times to retry the check before considering the service unhealthy.
+      start_period: 2m  # Time to give the service to start before starting the health checks.
+   
+    logging:  # Prevents log files from growing indefinitely, which could eventually consume all available disk space.
+      options:
+        max-size: "10m"  # Max size of log file.
+        max-file: "3"  # Max number of log files.
