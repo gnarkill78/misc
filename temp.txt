@@ -48,3 +48,24 @@ router.post('/post', function(req, res, next) {
   apiRequest.write(`username=${username}&status=${status}&postContent=${postContent}`);
   apiRequest.end();
 });
+
+
+To ensure that you don't expose sensitive information like request paths in parameters, you need to implement proper security measures both on the backend (Flask API) and the frontend (Express.js in your case). Here are some steps you can take:
+
+Backend (Flask API):
+Sanitize Inputs: Always validate and sanitize inputs to your Flask API endpoints to prevent injection attacks.
+Limit Logging: Ensure that you don't log sensitive information such as request paths unless absolutely necessary. If you must log them, make sure to use appropriate log levels and consider masking or obfuscating sensitive parts.
+Secure Routes: Use proper authentication and authorization mechanisms to secure your routes. Don't expose sensitive data or functionality without proper authentication.
+HTTPS: Enforce HTTPS to encrypt data transmitted between the client and the server, including request paths.
+Frontend (Express.js):
+Avoid Query Parameters: In your Express.js frontend, avoid passing sensitive information like request paths as query parameters in URLs.
+Client-Side Security: Implement client-side security measures such as input validation and sanitization to prevent injection attacks.
+HTTPS: Ensure that your frontend communicates with the backend over HTTPS to prevent eavesdropping and data tampering.
+Docker Configuration:
+Network Isolation: Ensure that your Docker containers are properly configured with network isolation to prevent unauthorized access to sensitive information.
+Security Audits and Penetration Testing:
+Regularly conduct security audits and penetration testing to identify and fix any vulnerabilities in your application stack.
+Security Best Practices:
+Follow security best practices for both Flask and Express.js development.
+Stay updated with security advisories and patches for the libraries and frameworks you use.
+In conclusion, while Express.js can play a role in securing your frontend, ensuring that sensitive information like request paths isn't exposed requires a holistic approach involving both backend and frontend development practices, as well as proper configuration of your Docker environment.
